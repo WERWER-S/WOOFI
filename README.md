@@ -6,4 +6,4 @@ The configuration is done in the config file
 
 Private keys should be placed in the keys file
 
-DONATE: 0xF4865d56fB8EC2e7e43545A9e4168b2912619DD3
+DONATE: 0xD4810CecAc602Bd25eE3ff7b5f35C45Ac4595fed
