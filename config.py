@@ -1,18 +1,20 @@
 import os
+import sys
 from pathlib import Path
 
 # Создаем объект Path для директории
-directory_path = Path("C:/Users/Kirill/Desktop/Project/Web3")
+if getattr(sys, 'frozen', False):
+    directory_path = Path(sys.executable).parent.absolute()
+else:
+    directory_path = Path(__file__).parent.parent.absolute()
 
-absolute_path = directory_path.absolute()
-
-ABIS_DIR = os.path.join(absolute_path, 'abis')
+# Here edit your path if you have errors
+ABIS_DIR = os.path.join(directory_path, 'woofi', 'abis')
 
 TOKEN_ABI = os.path.join(ABIS_DIR, 'token.json')
 WOOFI_ABI = os.path.join(ABIS_DIR, 'woofi.json')
-STARGATE_ABI = os.path.join(ABIS_DIR, 'stargate.json')
-BALANCER_ABI = os.path.join(ABIS_DIR, 'balancer.json')
 
 POVTOR = 3
-Min_Akaunt = 30 #время между аккаунтами
-Max_Akaunt = 60
+
+PAUSA_MAX = 30 # сон
+PAUSA_MIN = 10

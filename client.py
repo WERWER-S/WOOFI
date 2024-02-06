@@ -1,14 +1,13 @@
-from web3 import Web3
 from typing import Optional
-import requests
-from web3.middleware import geth_poa_middleware
-from termcolor import cprint
 
-from models import DefaultABIs, TokenAmount
-from utils import read_json
-from models import Network
+import requests
+from web3 import Web3
+from web3.middleware import geth_poa_middleware
 
 from config import TOKEN_ABI
+from models import Network
+from models import TokenAmount
+from utils import read_json
 
 
 class Client:
@@ -134,7 +133,8 @@ class Client:
         try:
             data = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=300)
             if 'status' in data and data['status'] == 1:
-                cprint(f'{self.address} | transaction was successful: {self.network.explorer}{tx_hash.hex()}', 'green')
+                # cprint(f'{self.address} | transaction was successful: {self.network.explorer}{tx_hash.hex()}',
+                # 'green')
                 return True
             else:
                 print(f'{self.address} | transaction failed {data["transactionHash"].hex()}')

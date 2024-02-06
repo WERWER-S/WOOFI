@@ -1,4 +1,5 @@
 from web3 import Web3
+from loguru import logger
 from typing import Optional
 import time
 
@@ -41,19 +42,29 @@ class WooFi:
             amount=coin_price * float(amount.Ether) * (1 - slippage / 100),
             decimals=self.decimals
         )
-        return self.client.send_transaction(
-            to=self.router_address,
-            data=contract.encodeABI('swap',
-                                    args=(
-                                        WooFi.native_coin_address,
-                                        self.usdt_address,
-                                        amount.Wei,
-                                        min_to_amount.Wei,
-                                        self.client.address,
-                                        self.client.address
-                                    )),
-            value=amount.Wei
-        )
+        try:
+            tx = self.client.send_transaction(
+                to=self.router_address,
+                data=contract.encodeABI('swap',
+                                        args=(
+                                            WooFi.native_coin_address,
+                                            self.usdt_address,
+                                            amount.Wei,
+                                            min_to_amount.Wei,
+                                            self.client.address,
+                                            self.client.address
+                                        )),
+                value=amount.Wei
+            )
+            success_tx = self.client.verif_tx(tx)
+
+            if success_tx:
+                logger.info(f"{self.client.network.explorer}tx/{tx.hex()}")
+                logger.success(f'[{self.client.address}][Woofi Swap] Successfully swap to USDT')
+            else:
+                logger.error(f'[{self.client.address}][Woofi Swap] swap error to USDT')
+        except Exception as err:
+            logger.error(f'[{self.client.address}][Woofi Swap] swap error to USDT: {type(err).__name__} {err}')
 
     def swap_usdt_to_coin(self, amount: Optional[TokenAmount] = None, slippage: float = 1):
         if not amount:
@@ -79,15 +90,26 @@ class WooFi:
             amount=float(amount.Ether) / coin_price * (1 - slippage / 100)
         )
 
-        return self.client.send_transaction(
-            to=self.router_address,
-            data=contract.encodeABI('swap',
-                                    args=(
-                                        self.usdt_address,
-                                        WooFi.native_coin_address,
-                                        amount.Wei,
-                                        min_to_amount.Wei,
-                                        self.client.address,
-                                        self.client.address,
-                                    ))
-        )
+        try:
+            tx = self.client.send_transaction(
+                to=self.router_address,
+                data=contract.encodeABI('swap',
+                                        args=(
+                                            self.usdt_address,
+                                            WooFi.native_coin_address,
+                                            amount.Wei,
+                                            min_to_amount.Wei,
+                                            self.client.address,
+                                            self.client.address,
+                                        ))
+            )
+
+            success_tx = self.client.verif_tx(tx)
+
+            if success_tx:
+                logger.info(f"https://opbnbscan.com/tx/{tx.hex()}")
+                logger.success(f'[{self.client.address}][opBNB Bridge] Successfully bridge to opBNB')
+            else:
+                logger.error(f'[{self.client.address}][opBNB Bridge] bridge error to opBNB')
+        except Exception as err:
+            logger.error(f'[{self.client.address}][opBNB Bridge] bridge error to opBNB: {type(err).__name__} {err}')
