@@ -4,7 +4,7 @@ from typing import Optional
 import time
 
 from client import Client
-from config import WOOFI_ABI
+from config import WOOFI_ABI, RETRY
 from utils import read_json
 from models import TokenAmount
 from models import BSC, Avalanche, Polygon
