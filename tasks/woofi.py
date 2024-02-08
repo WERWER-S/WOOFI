@@ -42,7 +42,9 @@ class WooFi:
             amount=coin_price * float(amount.Ether) * (1 - slippage / 100),
             decimals=self.decimals
         )
-        try:
+        i = 0
+        while i <= RETRY:
+            try:
             tx = self.client.send_transaction(
                 to=self.router_address,
                 data=contract.encodeABI('swap',
@@ -65,7 +67,9 @@ class WooFi:
                 logger.error(f'[{self.client.address}][Woofi Swap] swap error to USDT')
         except Exception as err:
             logger.error(f'[{self.client.address}][Woofi Swap] swap error to USDT: {type(err).__name__} {err}')
-
+            if i <= RETRY:
+                logger.info(f'[{i}/{RETRY}] trying again...')
+                sleep(30)
     def swap_usdt_to_coin(self, amount: Optional[TokenAmount] = None, slippage: float = 1):
         if not amount:
             amount = self.client.balance_of(contract_address=self.usdt_address)
