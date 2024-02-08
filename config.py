@@ -14,7 +14,7 @@ ABIS_DIR = os.path.join(directory_path, 'woofi', 'abis')
 TOKEN_ABI = os.path.join(ABIS_DIR, 'token.json')
 WOOFI_ABI = os.path.join(ABIS_DIR, 'woofi.json')
 
-POVTOR = 3
+RETRY = 3
 
 PAUSA_MAX = 30 # сон
 PAUSA_MIN = 10
